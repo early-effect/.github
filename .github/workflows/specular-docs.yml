@@ -1,0 +1,77 @@
+name: Specular docs
+
+# Reusable: build a Specular static site and deploy to GitHub Pages (project site).
+#
+# Caller must grant: contents: read, pages: write, id-token: write
+# Enable Pages → Source: GitHub Actions on the calling repo.
+on:
+  workflow_call:
+    inputs:
+      sbt-project:
+        description: sbt project that defines specularSite (e.g. docs)
+        required: true
+        type: string
+      java-version:
+        description: Temurin JDK version
+        required: false
+        type: string
+        default: '25'
+      site-directory:
+        description: Path to built site relative to repo root
+        required: false
+        type: string
+        default: target/site
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.repository }}
+  cancel-in-progress: false
+
+env:
+  JAVA_OPTS: -Dfile.encoding=UTF-8
+  # Project Pages live at https://early-effect.github.io/<repo>/
+  SPECULAR_BASE_PATH: /${{ github.event.repository.name }}
+  SPECULAR_DOCS_URL: https://early-effect.github.io/${{ github.event.repository.name }}/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@0f481fcb613427c0f801b606911222b5b6f3083a # v5.5.0
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          cache: sbt
+
+      - name: Set up sbt
+        uses: sbt/setup-sbt@66fb4376e81982c7d92a4074170846fff88e2e30 # v1.5.0
+
+      - name: Build Specular site
+        shell: bash
+        run: sbt -v "${{ inputs.sbt-project }}/specularSite"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: ${{ inputs.site-directory }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ec86dd2f12068b14767c22d792a0 # v4.0.5

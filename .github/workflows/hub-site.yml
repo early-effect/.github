@@ -1,0 +1,18 @@
+name: Hub site
+
+# Manually rebuild www.earlyeffect.rocks.
+# Pages must deploy from early-effect.github.io (user site + CNAME), so this
+# workflow only reminds operators — the real job lives on that repo.
+on:
+  workflow_dispatch:
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open hub repo workflow
+        run: |
+          echo "Run the Hub site workflow here:"
+          echo "  https://github.com/early-effect/early-effect.github.io/actions/workflows/hub-site.yml"
+          echo "Or: gh workflow run hub-site.yml --repo early-effect/early-effect.github.io"
+          exit 1
