@@ -11,7 +11,7 @@ Reusable GitHub Actions for the [early-effect](https://github.com/early-effect) 
 
 ## Project docs (caller)
 
-In each library repo, add a thin workflow on `v*` tags:
+In each library repo, add a thin workflow on `v*` tags **and** `workflow_dispatch` (manual regen):
 
 ```yaml
 name: Docs
@@ -20,6 +20,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -39,7 +40,7 @@ jobs:
 
 Enable **GitHub Pages** → Source: **GitHub Actions** on the repo.
 
-Docs land at `https://early-effect.github.io/<repo>/`.
+Docs land at `https://early-effect.github.io/<repo>/`. Manual runs: **Actions → Docs → Run workflow**.
 
 ## Org hub
 
