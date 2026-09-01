@@ -51,3 +51,7 @@ The live hub is [`early-effect.github.io`](https://github.com/early-effect/early
 2. Run **Actions → Hub site → Run workflow** on `early-effect.github.io`
 
 (A stub `hub-site` workflow here prints the link so the org `.github` repo stays the docs index.)
+
+## License
+
+Copyright Russell White. Licensed under the [Apache License, Version 2.0](LICENSE).
