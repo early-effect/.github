@@ -39,6 +39,8 @@ env:
   # from — so the docsUrl recorded *inside* that metadata must match, or the hub links off-domain.
   SPECULAR_BASE_PATH: /${{ github.event.repository.name }}
   SPECULAR_DOCS_URL: https://www.earlyeffect.rocks/${{ github.event.repository.name }}/
+  # Docs-only (dynver `-ci`) deploys: sbt-specular maps display version via stripCi.
+  SPECULAR_STRIP_CI: "true"
 
 jobs:
   build:
